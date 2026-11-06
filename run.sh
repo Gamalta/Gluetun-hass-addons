@@ -68,8 +68,28 @@ while [ "${i}" -lt "${count}" ]; do
     i=$((i + 1))
 done
 
-# SNI proxy (nginx): let ports 80 and 443 through Gluetun's firewall, then
-# start nginx in the background once the VPN interface is up.
+# SNI proxy (nginx): only the networks of 'sni_proxy_allowed_networks' may use
+# it. nginx.conf includes this file in both servers, followed by 'deny all'.
+ALLOWED_NETWORKS_CONF=/etc/nginx/allowed_networks.conf
+: > "${ALLOWED_NETWORKS_CONF}"
+jq -r '.sni_proxy_allowed_networks // [] | .[]' "${OPTIONS}" |
+    while IFS= read -r network; do
+        case "${network}" in
+            "" | *[!0-9A-Fa-f.:/]*)
+                log "Skipping invalid network '${network}'"
+                ;;
+            *)
+                echo "allow ${network};" >> "${ALLOWED_NETWORKS_CONF}"
+                log "SNI proxy allows ${network}"
+                ;;
+        esac
+    done
+if [ ! -s "${ALLOWED_NETWORKS_CONF}" ]; then
+    log "No allowed network: the SNI proxy will refuse every connection"
+fi
+
+# Let ports 80 and 443 through Gluetun's firewall, then start nginx in the
+# background once the VPN interface is up.
 export FIREWALL_INPUT_PORTS="${FIREWALL_INPUT_PORTS:+${FIREWALL_INPUT_PORTS},}80,443"
 
 (

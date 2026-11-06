@@ -1,6 +1,6 @@
 name: "Gluetun"
 description: "VPN client exposing an HTTP proxy and a Shadowsocks server through your VPN provider"
-version: "1.1.1"
+version: "1.1.2"
 slug: "gluetun"
 url: "https://github.com/Gamalta/Gluetun-hass-addons"
 arch:
@@ -33,6 +33,10 @@ options:
   vpn_type: wireguard
   httpproxy: true
   shadowsocks: false
+  sni_proxy_allowed_networks:
+    - "192.168.0.0/16"
+    - "172.30.32.0/23"
+    - "fe80::/10"
   log_level: info
   env: []
 schema:
@@ -52,6 +56,8 @@ schema:
   shadowsocks: bool
   shadowsocks_password: password?
   firewall_outbound_subnets: str?
+  sni_proxy_allowed_networks:
+    - match(^[0-9A-Fa-f.:]+(/[0-9]{1,3})?$)
   log_level: list(debug|info|warning|error)
   env:
     - name: match(^[A-Za-z_][A-Za-z0-9_]*$)

@@ -71,6 +71,17 @@ route through the VPN (for example with a DNS rewrite in AdGuard Home or
 Pi-hole) to your Home Assistant IP: devices then reach those sites through the
 VPN without any proxy setting.
 
+Only clients from **SNI proxy allowed networks** may use it: other connections
+are closed (443) or get a `403` (80). The default allows `192.168.0.0/16`, Home
+Assistant's internal network `172.30.32.0/23` and IPv6 link-local `fe80::/10`.
+If your devices use IPv6, add your IPv6 prefix (for example
+`2001:db8:1:2::/64`). IPv6 has no NAT: if your router lets ports 80 and 443 in,
+this list is what keeps the proxy from being open to the internet. An empty list
+refuses every connection.
+
+Each connection is written to the app log: `client -> name (status)` on 443,
+a standard access log line on 80.
+
 Ports 80 and 443 must be free on the host: if another app already uses them,
 this app will not start.
 

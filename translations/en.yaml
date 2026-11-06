@@ -51,6 +51,12 @@ configuration:
     description: >-
       Comma-separated subnets Gluetun may reach outside the VPN, for example
       your LAN 192.168.1.0/24.
+  sni_proxy_allowed_networks:
+    name: SNI proxy allowed networks
+    description: >-
+      Networks (CIDR) allowed to use the SNI proxy on ports 80 and 443, for
+      example 192.168.1.0/24 or your IPv6 prefix 2001:db8:1:2::/64. Every other
+      client is refused.
   log_level:
     name: Log level
     description: Gluetun log level.
