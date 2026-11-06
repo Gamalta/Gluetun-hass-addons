@@ -1,6 +1,6 @@
 name: "Gluetun"
 description: "VPN client exposing an HTTP proxy and a Shadowsocks server through your VPN provider"
-version: "1.0.0"
+version: "1.1.0"
 slug: "gluetun"
 url: "https://github.com/Gamalta/Gluetun-hass-addons"
 arch:
@@ -21,7 +21,9 @@ map:
   - app_config
 
 ports:
-  8888/tcp: 8888
+  80/tcp: 80
+  443/tcp: 443
+  8888/tcp: null
   8388/tcp: null
   8388/udp: null
   8000/tcp: null

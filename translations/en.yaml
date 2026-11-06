@@ -67,6 +67,8 @@ configuration:
         name: Value
         description: Variable value.
 network:
+  80/tcp: SNI proxy (HTTP, by Host header)
+  443/tcp: SNI proxy (HTTPS, by TLS SNI)
   8888/tcp: HTTP proxy
   8388/tcp: Shadowsocks (TCP)
   8388/udp: Shadowsocks (UDP)

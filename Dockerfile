@@ -2,9 +2,11 @@
 # since Supervisor 2026.04 build.yaml is legacy and BUILD_FROM is no longer provided.
 FROM ghcr.io/qdm12/gluetun:v3.41.3
 
-# jq is used by run.sh to read the app options
-RUN apk add --no-cache jq
+# jq is used by run.sh to read the app options.
+# nginx (with its stream module) is the SNI / Host proxy on ports 443 and 80.
+RUN apk add --no-cache jq nginx nginx-mod-stream
 
+COPY nginx.conf /etc/nginx/nginx.conf
 COPY run.sh /run.sh
 RUN chmod a+x /run.sh
 

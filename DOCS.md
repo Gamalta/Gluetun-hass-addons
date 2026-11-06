@@ -56,12 +56,26 @@ or a WireGuard config with `WIREGUARD_CONF_SECRETFILE=/config/wg0.conf`.
 
 | Port | Use | Default |
 |---|---|---|
-| 8888/tcp | HTTP proxy | enabled |
+| 80/tcp | SNI proxy, HTTP | enabled |
+| 443/tcp | SNI proxy, HTTPS | enabled |
+| 8888/tcp | HTTP proxy | disabled: enable the 8888 port to use it |
 | 8388/tcp + udp | Shadowsocks | disabled: enable the **Shadowsocks** option and these ports |
 | 8000/tcp | Gluetun control server | disabled: needs an auth config, see the Gluetun wiki |
 
-## Using the proxy
+## Using the SNI proxy
 
-Point a device or app to `http://<home-assistant-ip>:8888` (with the proxy
+Once the VPN is up, nginx listens on ports 443 and 80 and forwards each
+connection to the host it asks for (the TLS SNI name on 443, the `Host` header
+on 80), through the VPN. TLS is not decrypted. Point the DNS names you want to
+route through the VPN (for example with a DNS rewrite in AdGuard Home or
+Pi-hole) to your Home Assistant IP: devices then reach those sites through the
+VPN without any proxy setting.
+
+Ports 80 and 443 must be free on the host: if another app already uses them,
+this app will not start.
+
+## Using the HTTP proxy
+
+Enable the 8888 port in the Network section, then point a device or app to `http://<home-assistant-ip>:8888` (with the proxy
 credentials if set). Other apps can reach it on the internal network at
 `http://<app-hostname>:8888`.

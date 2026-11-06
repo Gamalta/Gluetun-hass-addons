@@ -68,5 +68,15 @@ while [ "${i}" -lt "${count}" ]; do
     i=$((i + 1))
 done
 
+# SNI proxy (nginx): let ports 80 and 443 through Gluetun's firewall, then
+# start nginx in the background once the VPN interface is up.
+export FIREWALL_INPUT_PORTS="${FIREWALL_INPUT_PORTS:+${FIREWALL_INPUT_PORTS},}80,443"
+
+(
+    until [ -d "/sys/class/net/${VPN_INTERFACE:-tun0}" ]; do sleep 2; done
+    log "VPN up, starting SNI proxy"
+    nginx
+) &
+
 log "Starting Gluetun..."
 exec /gluetun-entrypoint "$@"
