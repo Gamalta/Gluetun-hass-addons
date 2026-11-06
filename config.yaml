@@ -1,0 +1,56 @@
+name: "Gluetun"
+description: "VPN client exposing an HTTP proxy and a Shadowsocks server through your VPN provider"
+version: "1.0.0"
+slug: "gluetun"
+url: "https://github.com/Gamalta/Gluetun-hass-addons"
+arch:
+  - aarch64
+  - amd64
+startup: services
+boot: auto
+
+# Gluetun manages its own tun interface and iptables kill switch, inside its
+# own network namespace: the rest of Home Assistant is not routed through the VPN.
+privileged:
+  - NET_ADMIN
+devices:
+  - /dev/net/tun
+
+# /config: optional files (custom OpenVPN config, WireGuard wg0.conf, ...)
+map:
+  - app_config
+
+ports:
+  8888/tcp: 8888
+  8388/tcp: null
+  8388/udp: null
+  8000/tcp: null
+
+options:
+  vpn_service_provider: null
+  vpn_type: wireguard
+  httpproxy: true
+  shadowsocks: false
+  log_level: info
+  env: []
+schema:
+  vpn_service_provider: str
+  vpn_type: list(openvpn|wireguard)
+  openvpn_user: str?
+  openvpn_password: password?
+  wireguard_private_key: password?
+  wireguard_preshared_key: password?
+  wireguard_addresses: str?
+  server_countries: str?
+  server_cities: str?
+  server_hostnames: str?
+  httpproxy: bool
+  httpproxy_user: str?
+  httpproxy_password: password?
+  shadowsocks: bool
+  shadowsocks_password: password?
+  firewall_outbound_subnets: str?
+  log_level: list(debug|info|warning|error)
+  env:
+    - name: match(^[A-Za-z_][A-Za-z0-9_]*$)
+      value: str

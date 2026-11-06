@@ -1,0 +1,73 @@
+configuration:
+  vpn_service_provider:
+    name: VPN service provider
+    description: >-
+      Gluetun provider name, for example mullvad, protonvpn, nordvpn, surfshark,
+      private internet access, or custom.
+  vpn_type:
+    name: VPN type
+    description: VPN protocol to use.
+  openvpn_user:
+    name: OpenVPN user
+    description: OpenVPN username (OpenVPN only).
+  openvpn_password:
+    name: OpenVPN password
+    description: OpenVPN password (OpenVPN only).
+  wireguard_private_key:
+    name: WireGuard private key
+    description: WireGuard private key, base64 (WireGuard only).
+  wireguard_preshared_key:
+    name: WireGuard preshared key
+    description: WireGuard preshared key, if your provider uses one.
+  wireguard_addresses:
+    name: WireGuard addresses
+    description: Interface address(es) given by your provider, for example 10.64.222.21/32.
+  server_countries:
+    name: Server countries
+    description: Comma-separated list of countries to pick a server from.
+  server_cities:
+    name: Server cities
+    description: Comma-separated list of cities to pick a server from.
+  server_hostnames:
+    name: Server hostnames
+    description: Comma-separated list of server hostnames to pick from.
+  httpproxy:
+    name: HTTP proxy
+    description: Enable the HTTP proxy (port 8888).
+  httpproxy_user:
+    name: HTTP proxy user
+    description: Username required to use the HTTP proxy. Recommended.
+  httpproxy_password:
+    name: HTTP proxy password
+    description: Password required to use the HTTP proxy. Recommended.
+  shadowsocks:
+    name: Shadowsocks
+    description: Enable the Shadowsocks server (port 8388). Also enable the 8388 ports in the Network section.
+  shadowsocks_password:
+    name: Shadowsocks password
+    description: Password of the Shadowsocks server.
+  firewall_outbound_subnets:
+    name: Outbound subnets
+    description: >-
+      Comma-separated subnets Gluetun may reach outside the VPN, for example
+      your LAN 192.168.1.0/24.
+  log_level:
+    name: Log level
+    description: Gluetun log level.
+  env:
+    name: Extra environment variables
+    description: >-
+      Any other Gluetun variable (see the Gluetun wiki). Applied last, so they
+      override the options above.
+    fields:
+      name:
+        name: Name
+        description: Variable name, for example WIREGUARD_ENDPOINT_IP.
+      value:
+        name: Value
+        description: Variable value.
+network:
+  8888/tcp: HTTP proxy
+  8388/tcp: Shadowsocks (TCP)
+  8388/udp: Shadowsocks (UDP)
+  8000/tcp: Gluetun control server (requires auth configuration)
